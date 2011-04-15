@@ -4,6 +4,7 @@ from rss import *
 global letterList
 sList = {} # içerisine nGram şeyleri doldurulacak. her dilinki ayrı ayrı tabi.
 
+# Conversion of some turkish language specific characters
 charList = {"\x80":"c",
             "\x8e":"a",
             "\x99":"o",
@@ -47,18 +48,16 @@ charList = {"\x80":"c",
             "$":"",
             "&":"",
             "/":"",
-            "\\":""} #buraya xD, :S fln gibi smileyler de eklenebilir.
+            "\\":""} #This set is not complete!!
 
-feedList = ["cnn.xml","bbc.xml"] #buraya kontrol edilecek feedlerin listesi eklenmeli.
+feedList = ["cnn.xml","bbc.xml"] #If new feeds want to be precessed, can be added to here
 
-#harfleri küçültmek için str(hede).lower() mevcuttur.
+#Replace language specfiic characters
 def repChar(inputStr,charDict):
     ret = inputStr.encode("utf-8")
     for x in charDict:
         ret = ret.replace(x,charDict[x])
     return ret
-
-#harfleri ayırmak için str(hede).split() mevcut. split(",",2) dersem 2 defa , olan yerden ayırır. 
 
 kedi = "the cat sat on the mat! so i shouted at him!!!"
 
@@ -66,7 +65,7 @@ kedi = repChar(kedi,charList)
 print kedi.split()
 
 def nGram(inputStr,nMax,lang):
-    #string'in (n-1)inci karakterinden başlayarak stringin sonuna kadar for ile tara. sonra bu taradığın şeyleri otomatik olarak letterList'e ekle.
+    #It calculates all n-grams such that 1<=n<=nMax
     try:
         letterList = sList[lang]
     except:
@@ -79,25 +78,23 @@ def nGram(inputStr,nMax,lang):
         lPoint = maxGram
         while lPoint < len(inputStr) + 1:
             try:
-                letterList[str(maxGram)] = letterList[str(maxGram)] + 1
+                letterList[str(maxGram)] = letterList[str(maxGram)] + 1 #Total number of each n letter sets
             except:
                 letterList[str(maxGram)] = 1
             try:
-                letterList[inputStr[fPoint:lPoint]] = letterList[inputStr[fPoint:lPoint]] + 1
+                letterList[inputStr[fPoint:lPoint]] = letterList[inputStr[fPoint:lPoint]] + 1 #Value of a number of a letter
             except:
                 letterList[inputStr[fPoint:lPoint]] = 1
-            fPoint = fPoint + 1 #bunu kısayolu ne?
+            fPoint = fPoint + 1 
             lPoint = lPoint + 1
         maxGram = maxGram - 1
     sList[lang] = letterList
 
-nVal = 1 #nGram'ın n'si
+nVal = 1 #We only consider 1 gram (currently :p)
 
-def fonksiyon(): #isim bulamadım :D
+def processFeeds():
     for x in feedList:
-        #burada feedlist'teki url'yi indir.
         feed = getFeed(x)
-        #indirdikten sonra üstteki fonksiyonu da değiştir.
         for channel in feed:
             print "Feed: %s, %s" %(channel["title"],channel["desc"])
             print "Language: %s" %(channel["lang"])
@@ -109,6 +106,6 @@ def fonksiyon(): #isim bulamadım :D
 
 
 
-fonksiyon()
+processFeeds()
 print sList
 

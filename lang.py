@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from rss import *
 from pylab import *
+import ngram
 
 global letterList
 sList = {} # içerisine nGram şeyleri doldurulacak. her dilinki ayrı ayrı tabi.
@@ -31,6 +32,7 @@ charList = {"\x80":"c",
             ")":"",
             "(":"",
             "'":"",
+
             '"':"",
             "1":"",
             "2":"",
@@ -65,34 +67,7 @@ kedi = "the cat sat on the mat! so i shouted at him!!!"
 kedi = repChar(kedi,charList)
 print kedi.split()
 
-def nGram(inputStr,nMax,lang):
-    #It calculates all n-grams such that 1<=n<=nMax
-    try:
-        letterList = sList[lang]
-    except:
-        letterList = {}
-    maxGram = len(inputStr)
-    if maxGram > nMax:
-        maxGram = nMax
-    while maxGram > 0:
-        fPoint = 0
-        lPoint = maxGram
-        while lPoint < len(inputStr) + 1:
-            try:
-                letterList[str(maxGram)] = letterList[str(maxGram)] + 1 #Total number of each n letter sets
-            except:
-                letterList[str(maxGram)] = 1
-            try:
-                letterList[inputStr[fPoint:lPoint]] = letterList[inputStr[fPoint:lPoint]] + 1 #Value of a number of a letter
-            except:
-                letterList[inputStr[fPoint:lPoint]] = 1
-            fPoint = fPoint + 1 
-            lPoint = lPoint + 1
-        maxGram = maxGram - 1
-    sList[lang] = letterList
-
-nVal = 1 #We only consider 1 gram (currently :p)
-
+n=ngram.ngram()
 def processFeeds():
     for x in feedList:
         feed = getFeed(x)
@@ -101,9 +76,9 @@ def processFeeds():
             print "Language: %s" %(channel["lang"])
             for obj in channel["titles"]:
                 for x in repChar(obj["title"],charList).lower().split():
-                    nGram(x,nVal,channel["lang"])
+                    n.update(x,channel["lang"])
                 for x in repChar(obj["desc"],charList).lower().split():
-                    nGram(x,nVal,channel["lang"])
+                    n.update(x,channel["lang"])
 
 
 
@@ -121,8 +96,9 @@ def plotHistograms(values):
 	
 processFeeds()
 x=1
-for i in sList:
+a=n.getsList();
+for i in a:
 	subplot(2,1,x)
-	plotHistograms(sList[i])
+	plotHistograms(a[i])
 	x=x+1
 show()

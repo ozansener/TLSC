@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from rss import *
+from pylab import *
 
 global letterList
 sList = {} # içerisine nGram şeyleri doldurulacak. her dilinki ayrı ayrı tabi.
@@ -106,6 +107,22 @@ def processFeeds():
 
 
 
+def plotHistograms(values):
+	print values
+	array=[];
+	for i in range(97,123):
+		try:
+			array.append(values[chr(i)]/float(values["1"]))
+		except:
+			array.append(0)
+	xAxis = range(97,123)
+	plot(xAxis,array) 	
+	print array
+	
 processFeeds()
-print sList
-
+x=1
+for i in sList:
+	subplot(2,1,x)
+	plotHistograms(sList[i])
+	x=x+1
+show()

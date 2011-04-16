@@ -29,3 +29,5 @@ class ngram(object):
 		self.sList[lang] = letterList
 	def getsList(self):
 		return self.sList
+	def clearsList(self):
+		self.sList = {}

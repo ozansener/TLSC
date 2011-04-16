@@ -12,3 +12,15 @@ def writeXml(inputDict, xmlLoc): #inputDict = sList, xmlLoc = location of xml
     xmlTree = ET.ElementTree(rootElement)
     xmlTree.write(xmlLoc)
         
+
+def readXml(xmlLoc):
+    retDict = {}
+    xml = open(xmlLoc,"r").read()
+    feed = ET.XML(xml)
+    for language in feed:
+        langDict = {}
+        for obj in language:
+            if obj.text != None:
+                langDict[obj.text] = str(obj.attrib["count"])
+        retDict[language.attrib["lang"].encode("utf-8")] = langDict
+    return retDict

@@ -31,3 +31,5 @@ class ngram(object):
 		return self.sList
 	def clearsList(self):
 		self.sList = {}
+	def setsList(self,sL):
+		self.sList = sL

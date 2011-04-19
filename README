@@ -1,1 +1,3 @@
 Hack-A-Bit project
+
+This project is a generic language classification code by using python and N-gram statistics. It gathers data from the rss feeds, and uses XML for all types of file I/O. Specifically 1-gram statistics is used for this project. It will also have the ability to distinguish different subjects automatically by using simple belief networks hopefully (possibly soon :p). There will also be tweeter bot implementation and this implementation will work on IEEE METU CS Servers with user name @ieeecsbot.
